@@ -1,0 +1,40 @@
+service: todo-backend
+frameworkVersion: ">=1.26.0"
+package:
+  individually: false
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  memorySize: 128
+  timeout: 60
+  versionFunctions: true
+  environment: ${file(env.yml)}
+  role: arn:aws:iam::015953464989:role/serverless-lamda-role
+  stage: production
+  region: ap-south-1
+  deploymentBucket:
+    name: codepipeline-todo
+
+custom:
+  stage: production
+
+functions:
+  todo-addBuckets:
+    name: todo-addBuckets
+    handler: dist/src/todo-addBuckets/index.handler
+  todo-addTodo:
+    name: todo-addTodo
+    handler: dist/src/todo-addTodo/index.handler
+  todo-updateTodo:
+    name: todo-updateTodo
+    handler: dist/src/todo-updateTodo/index.handler
+  todo-deleteTodo:
+    name: todo-deleteTodo
+    handler: dist/src/todo-deleteTodo/index.handler
+  todo-getStore:
+    name: todo-getStore
+    handler: dist/src/todo-getStore/index.handler
+
+plugins:
+  - serverless-offline

@@ -12,9 +12,8 @@ export const BucketReducer = (state = initialState, action) => {
     switch (action.type) {
         case PERSIST_BUCKETS:
             let todoState = JSON.parse(window.localStorage.getItem("bucketState"));
-            if (action.payload) { action.payload.loading = false; }
-            if (todoState) { todoState.loading = false; }
-            return todoState || action.payload || { ...state, loading: false };
+            let prevstate = todoState || state;
+            return { ...prevstate, buckets: action.payload, loading: false };
         case ADD_INPUT_BAR:
             {
                 return { ...state, isAddBucketClicked: true };

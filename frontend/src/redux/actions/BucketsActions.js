@@ -6,7 +6,7 @@ export const CREATE_BUCKET = "create_bucket";
 export const ADD_INPUT_BAR = "bucketInputBar";
 export const CHANGE_INPUT = "on_input_change_bucket";
 export const HIDE_INPUT_BAR = "hide_input";
-export const PERSIST_BUCKETS = "persist";
+export const PERSIST_BUCKETS = "persistBucket";
 export const IS_LOADING = "loading";
 export const CREATE_ERROR = "error";
 
@@ -42,9 +42,10 @@ export const createBucket = (data) => {
         payload: data
     }
 }
-export const persistBuckets = () => {
+export const persistBuckets = (buckets) => {
     return {
-        type: PERSIST_BUCKETS
+        type: PERSIST_BUCKETS,
+        payload: buckets
     };
 };
 export const isLoading = () => {
@@ -81,7 +82,7 @@ export const getStore = () => {
         dispatch(isLoading());
         axios.get("https://56x12e6b60.execute-api.ap-south-1.amazonaws.com/prod/getstore")
             .then((res) => {
-                dispatch(persistBuckets(res.buckets));
+                dispatch(persistBuckets(res.data.buckets));
             })
             .catch((error) => {
                 dispatch(onError(error));

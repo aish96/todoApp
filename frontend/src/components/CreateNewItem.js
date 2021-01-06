@@ -44,6 +44,7 @@ class AddTask extends Component {
     getText = () => {
         switch (this.props.type) {
             case TYPES.EDIT_TODO:
+                console.log(this.props.editText)
                 return this.props.editText;
             case TYPES.ADD_TODO:
                 return this.props.taskText;
@@ -107,7 +108,7 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = (state, passedProps) => ({
     taskText: state.todos.taskText,
     bucketAddText: state.buckets.tempText,
-    editText: state.todos.editItem.text,
+    editText: state.todos.editItem.task,
     bucketText: state.buckets.tempText,
     ...passedProps
 });

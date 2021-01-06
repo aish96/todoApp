@@ -2,8 +2,9 @@ import { ADD_TODO, EDIT_TODO, DELETE_TODO, CHANGE_INPUT, HIDE_INPUT_BAR, ADD_INP
 import uniqid from "uniqid";
 const axios = require('axios').default;
 
-export const persistTodos = () => ({
-    type: PERSIST_TODOS
+export const persistTodos = (todos) => ({
+    type: PERSIST_TODOS,
+    payload: todos
 });
 
 export const addTodo = (data) => {
@@ -13,10 +14,10 @@ export const addTodo = (data) => {
     }
 }
 
-export const editTodo = ({ id, text }) => {
+export const editTodo = ({ id, task }) => {
     return {
         type: EDIT_TODO,
-        payload: { id, text }
+        payload: { id, task }
     }
 }
 
@@ -34,10 +35,10 @@ export const addInputBar = (bucketId) => {
     }
 }
 
-export const changeInputText = (text) => {
+export const changeInputText = (task) => {
     return {
         type: CHANGE_INPUT,
-        payload: text
+        payload: task
     }
 }
 
@@ -47,10 +48,10 @@ export const hideInputBar = () => {
     }
 }
 
-export const updateTodoItem = (text) => {
+export const updateTodoItem = (task) => {
     return {
         type: UPDATE_TODO,
-        payload: text
+        payload: task
     }
 }
 export const finishUpdateItem = (data) => {
@@ -135,7 +136,7 @@ export const getStoreTodo = () => {
         dispatch(isLoading());
         axios.get("https://56x12e6b60.execute-api.ap-south-1.amazonaws.com/prod/getstore")
             .then((res) => {
-                dispatch(persistTodos(res.todos));
+                dispatch(persistTodos(res.data.todos));
             })
             .catch((error) => {
                 dispatch(onError(error));

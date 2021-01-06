@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Card, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { addTodo, addInputBar, toggleTodoState, updateTodoApi } from "../redux/actions/TodoAction";
+import { addTodo, addInputBar, updateTodoApi } from "../redux/actions/TodoAction";
 import AddTask from "./CreateNewItem";
 import Todo from "./Todo";
 import { TYPES } from "../utils";

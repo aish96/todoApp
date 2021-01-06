@@ -10,14 +10,14 @@ import { TYPES } from "../utils";
 
 class Todo extends Component {
     render() {
-        let { text, id, completed } = this.props.item;
+        let { task, id, completed } = this.props.item;
         return (
             <Fragment>
                 {this.props.selected === id ?
                     <CreateNewItem type={TYPES.EDIT_TODO} bucket={this.props.bucket} task={this.props.item} /> :
                     <Fragment >
                         <FontAwesomeIcon icon={completed ? faCheckSquare : faSquare} className="icons" />
-                        <label className="py-1">{text}</label>
+                        <label className="py-1">{task}</label>
                         <ButtonGroup className="float-right">
                             <Button variant="link" className="text-info rounded-lg"
                                 onClick={() => { this.props.editTodo(this.props.item) }}>
@@ -42,7 +42,7 @@ const mapStateToProps = (state, passedProps) => {
 
 const mapDispatchToProps = dispatch => ({
     deleteTodo: (id) => dispatch(deleteTodoApi(id)),
-    editTodo: ({ id, text }) => dispatch(editTodo({ id, text })),
+    editTodo: ({ id, task }) => dispatch(editTodo({ id, task })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Todo);

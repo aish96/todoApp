@@ -12,9 +12,10 @@ export const TodoReducer = (state = initialState, action) => {
     switch (action.type) {
         case PERSIST_TODOS:
             let todoState = JSON.parse(window.localStorage.getItem("todosState"));
-            if (action.payload) { action.payload.loading = false; }
-            if (todoState) { todoState.loading = false; }
-            return todoState || action.payload || { ...state, loading: false };
+            let prevstate = todoState || state;
+            return {
+                ...prevstate, todos: action.payload, loading: false
+            };
         case ADD_INPUT_BAR:
             {
                 return { ...state, isAddTaskClicked: true, bucketId: action.payload };
@@ -29,7 +30,7 @@ export const TodoReducer = (state = initialState, action) => {
             {
                 let prevTodos = _.cloneDeep(state.todos);
                 if (state.taskText && state.taskText.trim())
-                    prevTodos.push({ text: state.taskText.trim(), id: action.payload.id, bucketId: action.payload.bucketId, completed: false });
+                    prevTodos.push({ task: state.taskText.trim(), id: action.payload.id, bucketId: action.payload.bucketId, completed: false });
                 window.localStorage.setItem("todosState", JSON.stringify({ ...state, todos: prevTodos, isAddTaskClicked: false, editItem: {}, selected: null }));
                 return { ...state, todos: prevTodos, taskText: "", isAddTaskClicked: false, loading: false };
             }
@@ -51,7 +52,7 @@ export const TodoReducer = (state = initialState, action) => {
             }
         case UPDATE_TODO: {
             let editItem = _.cloneDeep(state.editItem);
-            editItem.text = action.payload;
+            editItem.task = action.payload;
             return {
                 ...state,
                 editItem
@@ -61,7 +62,7 @@ export const TodoReducer = (state = initialState, action) => {
             let prevTodos = _.cloneDeep(state.todos);
             prevTodos = prevTodos.map(todo => {
                 if (todo.id === state.selected) {
-                    todo.text = state.editItem.text;
+                    todo.task = state.editItem.task;
                 }
                 return todo;
             });

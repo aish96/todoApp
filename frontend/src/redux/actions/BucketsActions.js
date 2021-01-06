@@ -76,3 +76,15 @@ export const createBucketAPI = (data) => {
         }
     }
 }
+export const getStore = () => {
+    return (dispatch) => {
+        dispatch(isLoading());
+        axios.get("https://56x12e6b60.execute-api.ap-south-1.amazonaws.com/prod/getstore")
+            .then((res) => {
+                dispatch(persistBuckets(res.buckets));
+            })
+            .catch((error) => {
+                dispatch(onError(error));
+            });
+    }
+}

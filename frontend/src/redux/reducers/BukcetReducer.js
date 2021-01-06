@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { ADD_INPUT_BAR, CHANGE_INPUT, HIDE_INPUT_BAR, CREATE_BUCKET, PERSIST_BUCKETS, IS_LOADING } from "../actions/BucketsActions";
+import { ADD_INPUT_BAR, CHANGE_INPUT, HIDE_INPUT_BAR, CREATE_BUCKET, PERSIST_BUCKETS, IS_LOADING, CREATE_ERROR } from "../actions/BucketsActions";
 const initialState = {
     buckets: [],
     isAddBucketClicked: false,
@@ -12,7 +12,9 @@ export const BucketReducer = (state = initialState, action) => {
     switch (action.type) {
         case PERSIST_BUCKETS:
             let todoState = JSON.parse(window.localStorage.getItem("bucketState"));
-            return todoState || { ...state };
+            if (action.payload) { action.payload.loading = false; }
+            if (todoState) { todoState.loading = false; }
+            return todoState || action.payload || { ...state, loading: false };
         case ADD_INPUT_BAR:
             {
                 return { ...state, isAddBucketClicked: true };
@@ -31,6 +33,9 @@ export const BucketReducer = (state = initialState, action) => {
         }
         case IS_LOADING: {
             return { ...state, loading: true }
+        }
+        case CREATE_ERROR: {
+            return { ...state, loading: false }
         }
         default: return state;
     }

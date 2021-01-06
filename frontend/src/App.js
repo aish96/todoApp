@@ -4,9 +4,9 @@ import { Navbar, CardColumns } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClipboardList, faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 import { connect } from 'react-redux';
-import { persistTodos } from "./redux/actions/TodoAction";
+import { persistTodos, getStoreTodo } from "./redux/actions/TodoAction";
 import { Component } from 'react';
-import { persistBuckets } from './redux/actions/BucketsActions';
+import { persistBuckets, getStore } from './redux/actions/BucketsActions';
 import ReactOverlayLoader from "reactjs-overlay-loader";
 
 class App extends Component {
@@ -43,7 +43,7 @@ const mapStateToProps = (state) => {
   }
 }
 const mapDispatchToProps = dispatch => ({
-  persistTodos: () => dispatch(persistTodos()),
-  persistBucket: () => dispatch(persistBuckets()),
+  persistTodos: () => dispatch(getStore()),
+  persistBucket: () => dispatch(getStoreTodo()),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(App);

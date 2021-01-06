@@ -1,4 +1,4 @@
-import { ADD_TODO, DELETE_TODO, EDIT_TODO, ADD_INPUT_BAR, CHANGE_INPUT, HIDE_INPUT_BAR, UPDATE_TODO, FINISH_ITEM_UPDATE, HIDE_EDIT, PERSIST_TODOS, TOGGLE_STATE, IS_LOADING } from "../actions/todoActionTypes";
+import { ADD_TODO, DELETE_TODO, EDIT_TODO, ADD_INPUT_BAR, CHANGE_INPUT, HIDE_INPUT_BAR, UPDATE_TODO, FINISH_ITEM_UPDATE, HIDE_EDIT, PERSIST_TODOS, TOGGLE_STATE, IS_LOADING, CREATE_ERROR } from "../actions/todoActionTypes";
 import * as _ from "lodash";
 const initialState = {
     todos: [],
@@ -12,7 +12,9 @@ export const TodoReducer = (state = initialState, action) => {
     switch (action.type) {
         case PERSIST_TODOS:
             let todoState = JSON.parse(window.localStorage.getItem("todosState"));
-            return todoState || { ...state };
+            if (action.payload) { action.payload.loading = false; }
+            if (todoState) { todoState.loading = false; }
+            return todoState || action.payload || { ...state, loading: false };
         case ADD_INPUT_BAR:
             {
                 return { ...state, isAddTaskClicked: true, bucketId: action.payload };
@@ -82,6 +84,9 @@ export const TodoReducer = (state = initialState, action) => {
             }
         case IS_LOADING: {
             return { ...state, loading: true }
+        }
+        case CREATE_ERROR: {
+            return { ...state, loading: false }
         }
         default:
             return state;

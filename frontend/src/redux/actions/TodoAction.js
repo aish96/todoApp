@@ -130,3 +130,15 @@ export const updateTodoApi = (data) => {
         }
     }
 }
+export const getStoreTodo = () => {
+    return (dispatch) => {
+        dispatch(isLoading());
+        axios.get("https://56x12e6b60.execute-api.ap-south-1.amazonaws.com/prod/getstore")
+            .then((res) => {
+                dispatch(persistTodos(res.todos));
+            })
+            .catch((error) => {
+                dispatch(onError(error));
+            });
+    }
+}

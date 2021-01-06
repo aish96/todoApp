@@ -23,13 +23,16 @@ class AddTask extends Component {
                 break;
         }
     }
-    onEditHandler = () => {
+    onEditHandler = (e) => {
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
+
         switch (this.props.type) {
             case TYPES.EDIT_TODO:
                 this.props.finishEdit();
                 break;
             case TYPES.ADD_TODO:
-                this.props.createTodo();
+                this.props.createTodo(this.props.bucket.id);
                 break;
             case TYPES.ADD_BUCKET:
                 this.props.createBuckets();
@@ -44,11 +47,14 @@ class AddTask extends Component {
                 return this.props.editText;
             case TYPES.ADD_TODO:
                 return this.props.taskText;
+            case TYPES.ADD_BUCKET:
+                return this.props.bucketText;
             default:
                 break;
         }
     }
-    onClose = () => {
+    onClose = (e) => {
+        e.stopPropagation();
         switch (this.props.type) {
             case TYPES.EDIT_TODO:
                 this.props.hideEdit();
@@ -95,13 +101,14 @@ const mapDispatchToProps = dispatch => ({
     hideInput_Bucket: () => dispatch(hideInputBar_Bucket()),
     hideEdit: () => dispatch(hideEditBar()),
     finishEdit: () => dispatch(finishUpdateItem()),
-    createTodo: () => dispatch(addTodo()),
+    createTodo: (e) => dispatch(addTodo(e)),
     createBuckets: () => dispatch(createBucket())
 });
 const mapStateToProps = (state, passedProps) => ({
     taskText: state.todos.taskText,
     bucketAddText: state.buckets.tempText,
     editText: state.todos.editItem.text,
+    bucketText: state.buckets.tempText,
     ...passedProps
 });
 export default connect(mapStateToProps, mapDispatchToProps)(AddTask);

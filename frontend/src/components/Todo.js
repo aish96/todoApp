@@ -2,19 +2,21 @@ import { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Button, ButtonGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPen, faCheckSquare } from "@fortawesome/free-solid-svg-icons";
+import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import { editTodo, deleteTodo } from "../redux/actions/TodoAction";
 import CreateNewItem from "./CreateNewItem";
 import { TYPES } from "../utils";
 
 class Todo extends Component {
     render() {
-        let { text, id } = this.props.item;
+        let { text, id, completed } = this.props.item;
         return (
             <Fragment>
                 {this.props.selected === id ?
                     <CreateNewItem type={TYPES.EDIT_TODO} bucket={this.props.bucket} /> :
-                    <Fragment>
+                    <Fragment >
+                        <FontAwesomeIcon icon={completed ? faCheckSquare : faSquare} className="icons" />
                         <label className="py-1">{text}</label>
                         <ButtonGroup className="float-right">
                             <Button variant="link" className="text-info rounded-lg"
@@ -40,7 +42,7 @@ const mapStateToProps = (state, passedProps) => {
 
 const mapDispatchToProps = dispatch => ({
     deleteTodo: (id) => dispatch(deleteTodo(id)),
-    editTodo: ({ id, text }) => dispatch(editTodo({ id, text }))
+    editTodo: ({ id, text }) => dispatch(editTodo({ id, text })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Todo);

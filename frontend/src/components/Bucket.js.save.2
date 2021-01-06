@@ -1,10 +1,10 @@
-import { Fragment, Component } from "react";
+qimport { Fragment, Component } from "react";
 import * as _ from "lodash";
 import { connect } from "react-redux";
 import { Card, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { addTodo, addInputBar, toggleTodoState } from "../redux/actions/TodoAction";
+import { addTodo, addInputBar } from "../redux/actions/TodoAction";
 import AddTask from "./CreateNewItem";
 import Todo from "./Todo";
 import { TYPES } from "../utils";
@@ -49,9 +49,7 @@ class Bucket extends Component {
                                 </ListGroupItem>
                                 {this.props.listItems && this.props.listItems.map(item => {
                                     if (item.bucketId === this.props.bucket.id)
-                                        return (< ListGroupItem key={item.id}
-                                            className={item.completed ? "todo completed" : "todo"}
-                                            onClick={() => { this.props.toggleSelection(item.id) }}>
+                                        return (< ListGroupItem key={item.id} >
                                             <Todo item={item} bucket={this.props.bucket} />
                                         </ListGroupItem>)
                                     return null;
@@ -66,16 +64,14 @@ class Bucket extends Component {
 const mapDispatchToProps = dispatch => ({
     addTodo: todo => dispatch(addTodo(todo)),
     onAddTask: (e) => dispatch(addInputBar(e)),
-    onAddBucketClick: () => dispatch(addInputBar_Bucket()),
-    toggleSelection: (id) => { dispatch(toggleTodoState(id)) }
-
+    onAddBucketClick: () => dispatch(addInputBar_Bucket())
 
 });
 const mapStateToProps = ({ todos, buckets }, passedProps) => {
     let listItems = passedProps.bucket ? todos.todos.filter(todo => todo.bucketId === passedProps.bucket.id) : [];
-    let isAddTaskClicked = todos.isAddTaskClicked && passedProps.bucket && todos.bucketId === passedProps.bucket.id;
+    console.log("on add", passedProps)
     return {
-        isAddTaskClicked,
+        isAddTaskClicked: todos.isAddTaskClicked && todos.bucketId === passedProps.bucket.id,
         listItems,
         ...passedProps,
         isAddBucketClicked: buckets.isAddBucketClicked

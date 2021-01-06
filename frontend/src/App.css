@@ -2,10 +2,12 @@
   outline: 0 !important;
   border: none !important;
 }
+
 .icons {
   margin-right: 10px;
   font-size: 20px;
 }
+
 .card {
   margin: 1.5rem;
   background-color: rgb(247, 247, 247);
@@ -14,15 +16,24 @@
     rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
   color: rgb(73, 79, 92);
 }
+
 .card-subtitle {
   font-size: 13px;
 }
+
 .list-group-item {
   margin-bottom: 5px;
   overflow-x: scroll;
 }
-/* 
-.list-group {
-  max-height: 600px;
-  overflow-y: scroll;
-} */
+
+.todo {
+  cursor: pointer !important;
+}
+
+.todo.completed {
+  background-color: #e5e5e5;
+}
+
+div.completed label {
+  text-decoration: line-through;
+}

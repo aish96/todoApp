@@ -1,4 +1,4 @@
-import { ADD_TODO, DELETE_TODO, EDIT_TODO, ADD_INPUT_BAR, CHANGE_INPUT, HIDE_INPUT_BAR, UPDATE_TODO, FINISH_ITEM_UPDATE, HIDE_EDIT, PERSIST_TODOS } from "../actions/todoActionTypes";
+import { ADD_TODO, DELETE_TODO, EDIT_TODO, ADD_INPUT_BAR, CHANGE_INPUT, HIDE_INPUT_BAR, UPDATE_TODO, FINISH_ITEM_UPDATE, HIDE_EDIT, PERSIST_TODOS, TOGGLE_STATE } from "../actions/todoActionTypes";
 import * as _ from "lodash";
 import uniqid from "uniqid";
 const initialState = {
@@ -15,7 +15,7 @@ export const TodoReducer = (state = initialState, action) => {
             return todoState || { ...state };
         case ADD_INPUT_BAR:
             {
-                return { ...state, isAddTaskClicked: true };
+                return { ...state, isAddTaskClicked: true, bucketId: action.payload };
             }
         case CHANGE_INPUT:
             {
@@ -27,9 +27,9 @@ export const TodoReducer = (state = initialState, action) => {
             {
                 let prevTodos = _.cloneDeep(state.todos);
                 if (state.taskText && state.taskText.trim())
-                    prevTodos.push({ text: state.taskText.trim(), id: uniqid() });
+                    prevTodos.push({ text: state.taskText.trim(), id: uniqid(), bucketId: action.payload, completed: false });
                 window.localStorage.setItem("todosState", JSON.stringify({ ...state, todos: prevTodos, isAddTaskClicked: false, editItem: {}, selected: null }));
-                return { ...state, todos: prevTodos, taskText: "", isAddTaskClicked: false, taskText: "" };
+                return { ...state, todos: prevTodos, taskText: "", isAddTaskClicked: false };
             }
         case DELETE_TODO:
             let todos = state.todos.filter(todo => todo.id !== action.payload);
@@ -67,6 +67,18 @@ export const TodoReducer = (state = initialState, action) => {
         }
         case HIDE_EDIT:
             return { ...state, selected: false, editItem: {} };
+        case TOGGLE_STATE:
+            {
+                let prevTodos = _.cloneDeep(state.todos);
+                prevTodos = prevTodos.map(todo => {
+                    if (todo.id === action.payload) {
+                        todo.completed = !todo.completed;
+                    }
+                    return todo;
+                });
+                window.localStorage.setItem("todosState", JSON.stringify({ ...state, todos: prevTodos, isAddTaskClicked: false, editItem: {}, selected: null }));
+                return { ...state, todos: prevTodos, selected: null, isAddTaskClicked: false, editItem: {} }
+            }
         default:
             return state;
     }

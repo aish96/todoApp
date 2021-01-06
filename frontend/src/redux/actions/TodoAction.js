@@ -1,12 +1,13 @@
-import { ADD_TODO, EDIT_TODO, DELETE_TODO, CHANGE_INPUT, HIDE_INPUT_BAR, ADD_INPUT_BAR, UPDATE_TODO, FINISH_ITEM_UPDATE, HIDE_EDIT, PERSIST_TODOS } from "./todoActionTypes"
+import { ADD_TODO, EDIT_TODO, DELETE_TODO, CHANGE_INPUT, HIDE_INPUT_BAR, ADD_INPUT_BAR, UPDATE_TODO, FINISH_ITEM_UPDATE, HIDE_EDIT, PERSIST_TODOS, TOGGLE_STATE } from "./todoActionTypes"
 
 export const persistTodos = () => ({
     type: PERSIST_TODOS
 });
 
-export const addTodo = () => {
+export const addTodo = (bucketId) => {
     return {
         type: ADD_TODO,
+        payload: bucketId
     }
 }
 
@@ -58,5 +59,11 @@ export const finishUpdateItem = () => {
 export const hideEditBar = () => {
     return {
         type: HIDE_EDIT,
+    }
+}
+export const toggleTodoState = (todoId) => {
+    return {
+        type: TOGGLE_STATE,
+        payload: todoId
     }
 }

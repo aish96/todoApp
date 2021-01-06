@@ -3,9 +3,7 @@ import uniqid from "uniqid";
 import { ADD_INPUT_BAR, CHANGE_INPUT, HIDE_INPUT_BAR, CREATE_BUCKET, PERSIST_BUCKETS } from "../actions/BucketsActions";
 const initialState = {
     buckets: [],
-    // selected: null,
     isAddBucketClicked: false,
-    // editItem: {},
     tempText: "",
 }
 

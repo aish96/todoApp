@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Card, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { addTodo, addInputBar, toggleTodoState } from "../redux/actions/TodoAction";
+import { addTodo, addInputBar, toggleTodoState, updateTodoApi } from "../redux/actions/TodoAction";
 import AddTask from "./CreateNewItem";
 import Todo from "./Todo";
 import { TYPES } from "../utils";
@@ -51,7 +51,10 @@ class Bucket extends Component {
                                     if (item.bucketId === this.props.bucket.id)
                                         return (< ListGroupItem key={item.id}
                                             className={item.completed ? "todo completed" : "todo"}
-                                            onClick={() => { this.props.toggleSelection(item.id) }}>
+                                            onClick={(e) => {
+                                                if (e.target === e.currentTarget)
+                                                    this.props.toggleSelection(item.id, !item.completed)
+                                            }}>
                                             <Todo item={item} bucket={this.props.bucket} />
                                         </ListGroupItem>)
                                     return null;
@@ -67,9 +70,7 @@ const mapDispatchToProps = dispatch => ({
     addTodo: todo => dispatch(addTodo(todo)),
     onAddTask: (e) => dispatch(addInputBar(e)),
     onAddBucketClick: () => dispatch(addInputBar_Bucket()),
-    toggleSelection: (id) => { dispatch(toggleTodoState(id)) }
-
-
+    toggleSelection: (id, completed) => { dispatch(updateTodoApi({ id, completed })) }
 });
 const mapStateToProps = ({ todos, buckets }, passedProps) => {
     let listItems = passedProps.bucket ? todos.todos.filter(todo => todo.bucketId === passedProps.bucket.id) : [];

@@ -1,12 +1,12 @@
-import { ADD_TODO, DELETE_TODO, EDIT_TODO, ADD_INPUT_BAR, CHANGE_INPUT, HIDE_INPUT_BAR, UPDATE_TODO, FINISH_ITEM_UPDATE, HIDE_EDIT, PERSIST_TODOS, TOGGLE_STATE } from "../actions/todoActionTypes";
+import { ADD_TODO, DELETE_TODO, EDIT_TODO, ADD_INPUT_BAR, CHANGE_INPUT, HIDE_INPUT_BAR, UPDATE_TODO, FINISH_ITEM_UPDATE, HIDE_EDIT, PERSIST_TODOS, TOGGLE_STATE, IS_LOADING } from "../actions/todoActionTypes";
 import * as _ from "lodash";
-import uniqid from "uniqid";
 const initialState = {
     todos: [],
     selected: null,
     isAddTaskClicked: false,
     editItem: {},
     taskText: "",
+    loading: false
 }
 export const TodoReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -27,16 +27,17 @@ export const TodoReducer = (state = initialState, action) => {
             {
                 let prevTodos = _.cloneDeep(state.todos);
                 if (state.taskText && state.taskText.trim())
-                    prevTodos.push({ text: state.taskText.trim(), id: uniqid(), bucketId: action.payload, completed: false });
+                    prevTodos.push({ text: state.taskText.trim(), id: action.payload.id, bucketId: action.payload.bucketId, completed: false });
                 window.localStorage.setItem("todosState", JSON.stringify({ ...state, todos: prevTodos, isAddTaskClicked: false, editItem: {}, selected: null }));
-                return { ...state, todos: prevTodos, taskText: "", isAddTaskClicked: false };
+                return { ...state, todos: prevTodos, taskText: "", isAddTaskClicked: false, loading: false };
             }
         case DELETE_TODO:
             let todos = state.todos.filter(todo => todo.id !== action.payload);
             window.localStorage.setItem("todosState", JSON.stringify({ ...state, todos, isAddTaskClicked: false, editItem: {}, selected: null }));
             return {
                 ...state,
-                todos
+                todos,
+                loading: false
             };
         case EDIT_TODO:
             {
@@ -63,7 +64,7 @@ export const TodoReducer = (state = initialState, action) => {
                 return todo;
             });
             window.localStorage.setItem("todosState", JSON.stringify({ ...state, todos: prevTodos, isAddTaskClicked: false, editItem: {}, selected: null }));
-            return { ...state, todos: prevTodos, selected: null }
+            return { ...state, todos: prevTodos, selected: null, loading: false }
         }
         case HIDE_EDIT:
             return { ...state, selected: false, editItem: {} };
@@ -77,8 +78,11 @@ export const TodoReducer = (state = initialState, action) => {
                     return todo;
                 });
                 window.localStorage.setItem("todosState", JSON.stringify({ ...state, todos: prevTodos, isAddTaskClicked: false, editItem: {}, selected: null }));
-                return { ...state, todos: prevTodos, selected: null, isAddTaskClicked: false, editItem: {} }
+                return { ...state, todos: prevTodos, selected: null, isAddTaskClicked: false, editItem: {}, loading: false }
             }
+        case IS_LOADING: {
+            return { ...state, loading: true }
+        }
         default:
             return state;
     }

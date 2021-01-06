@@ -4,7 +4,7 @@ import { Button, ButtonGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPen, faCheckSquare } from "@fortawesome/free-solid-svg-icons";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
-import { editTodo, deleteTodo } from "../redux/actions/TodoAction";
+import { editTodo, deleteTodoApi } from "../redux/actions/TodoAction";
 import CreateNewItem from "./CreateNewItem";
 import { TYPES } from "../utils";
 
@@ -14,7 +14,7 @@ class Todo extends Component {
         return (
             <Fragment>
                 {this.props.selected === id ?
-                    <CreateNewItem type={TYPES.EDIT_TODO} bucket={this.props.bucket} /> :
+                    <CreateNewItem type={TYPES.EDIT_TODO} bucket={this.props.bucket} task={this.props.item} /> :
                     <Fragment >
                         <FontAwesomeIcon icon={completed ? faCheckSquare : faSquare} className="icons" />
                         <label className="py-1">{text}</label>
@@ -41,7 +41,7 @@ const mapStateToProps = (state, passedProps) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    deleteTodo: (id) => dispatch(deleteTodo(id)),
+    deleteTodo: (id) => dispatch(deleteTodoApi(id)),
     editTodo: ({ id, text }) => dispatch(editTodo({ id, text })),
 });
 

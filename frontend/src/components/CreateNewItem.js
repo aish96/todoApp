@@ -3,9 +3,9 @@ import { Button, InputGroup, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
-import { addTodo, changeInputText, hideInputBar, updateTodoItem, finishUpdateItem, hideEditBar } from "../redux/actions/TodoAction";
+import { createTodoAPI, changeInputText, hideInputBar, updateTodoItem, hideEditBar, updateTodoApi } from "../redux/actions/TodoAction";
 import { TYPES } from "../utils";
-import { changeInputText_Bucket, hideInputBar_Bucket, createBucket } from "../redux/actions/BucketsActions";
+import { changeInputText_Bucket, hideInputBar_Bucket, createBucketAPI } from "../redux/actions/BucketsActions";
 
 class AddTask extends Component {
     onChangeHandler = (e) => {
@@ -29,13 +29,13 @@ class AddTask extends Component {
 
         switch (this.props.type) {
             case TYPES.EDIT_TODO:
-                this.props.finishEdit();
+                this.props.finishEdit(this.getText(), this.props.task.id, this.props.task.completed);
                 break;
             case TYPES.ADD_TODO:
-                this.props.createTodo(this.props.bucket.id);
+                this.props.createTodo(this.props.bucket.id, this.getText());
                 break;
             case TYPES.ADD_BUCKET:
-                this.props.createBuckets();
+                this.props.createBuckets(this.getText());
                 break;
             default:
                 break;
@@ -100,9 +100,9 @@ const mapDispatchToProps = dispatch => ({
     onBucType_Bucket: e => dispatch(changeInputText_Bucket(e.target.value)),
     hideInput_Bucket: () => dispatch(hideInputBar_Bucket()),
     hideEdit: () => dispatch(hideEditBar()),
-    finishEdit: () => dispatch(finishUpdateItem()),
-    createTodo: (e) => dispatch(addTodo(e)),
-    createBuckets: () => dispatch(createBucket())
+    finishEdit: (task, id, completed) => dispatch(updateTodoApi({ task, id, completed })),
+    createTodo: (bId, taskId) => dispatch(createTodoAPI({ bucketId: bId, task: taskId })),
+    createBuckets: (e) => dispatch(createBucketAPI({ name: e }))
 });
 const mapStateToProps = (state, passedProps) => ({
     taskText: state.todos.taskText,

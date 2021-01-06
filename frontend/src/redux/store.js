@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import logger from "redux-logger";
+import thunk from "redux-thunk";
 import { TodoReducer } from "./reducers/TodoReducer.reducer";
 import { BucketReducer } from "./reducers/BukcetReducer";
 const rootReducer = combineReducers({
@@ -7,4 +8,4 @@ const rootReducer = combineReducers({
     buckets: BucketReducer
 })
 // This would produce the following state object
-export const store = createStore(rootReducer, applyMiddleware(logger));
+export const store = createStore(rootReducer, applyMiddleware(logger, thunk));

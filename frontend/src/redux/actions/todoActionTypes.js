@@ -9,3 +9,5 @@ export const HIDE_INPUT_BAR = "hide_input";
 export const HIDE_EDIT = "hide_edit";
 export const PERSIST_TODOS = "persist";
 export const TOGGLE_STATE = "toggle";
+export const IS_LOADING = "loadingTodo";
+export const CREATE_ERROR = "errorTodo";

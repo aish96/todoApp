@@ -13,7 +13,7 @@ class Todo extends Component {
         return (
             <Fragment>
                 {this.props.selected === id ?
-                    <CreateNewItem type={TYPES.EDIT_TODO} /> :
+                    <CreateNewItem type={TYPES.EDIT_TODO} bucket={this.props.bucket} /> :
                     <Fragment>
                         <label className="py-1">{text}</label>
                         <ButtonGroup className="float-right">
@@ -31,10 +31,10 @@ class Todo extends Component {
         )
     }
 }
-const mapStateToProps = ({ selected }, passedProps) => {
+const mapStateToProps = (state, passedProps) => {
     return {
-        item: passedProps.item,
-        selected
+        selected: state.todos.selected,
+        ...passedProps
     }
 }
 

@@ -5,6 +5,7 @@ import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import { addTodo, changeInputText, hideInputBar, updateTodoItem, finishUpdateItem, hideEditBar } from "../redux/actions/TodoAction";
 import { TYPES } from "../utils";
+import { changeInputText_Bucket, hideInputBar_Bucket, createBucket } from "../redux/actions/BucketsActions";
 
 class AddTask extends Component {
     onChangeHandler = (e) => {
@@ -14,6 +15,9 @@ class AddTask extends Component {
                 break;
             case TYPES.ADD_TODO:
                 this.props.onTaskType(e);
+                break;
+            case TYPES.ADD_BUCKET:
+                this.props.onBucType_Bucket(e);
                 break;
             default:
                 break;
@@ -26,6 +30,9 @@ class AddTask extends Component {
                 break;
             case TYPES.ADD_TODO:
                 this.props.createTodo();
+                break;
+            case TYPES.ADD_BUCKET:
+                this.props.createBuckets();
                 break;
             default:
                 break;
@@ -49,6 +56,9 @@ class AddTask extends Component {
             case TYPES.ADD_TODO:
                 this.props.hideInput();
                 break;
+            case TYPES.ADD_BUCKET:
+                this.props.hideInput_Bucket();
+                break;
             default:
                 break;
         }
@@ -60,7 +70,7 @@ class AddTask extends Component {
                     <InputGroup className="mb-3">
                         <FormControl
                             name="taskText" value={this.getText()}
-                            placeholder="Enter Task" onChange={this.onChangeHandler}
+                            placeholder="Enter Title" onChange={this.onChangeHandler}
                         />
                         <InputGroup.Append>
                             <Button variant="outline-success" onClick={this.onEditHandler}>
@@ -81,13 +91,17 @@ const mapDispatchToProps = dispatch => ({
     onTaskType: e => dispatch(changeInputText(e.target.value)),
     onEditTask: e => dispatch(updateTodoItem(e.target.value)),
     hideInput: () => dispatch(hideInputBar()),
+    onBucType_Bucket: e => dispatch(changeInputText_Bucket(e.target.value)),
+    hideInput_Bucket: () => dispatch(hideInputBar_Bucket()),
     hideEdit: () => dispatch(hideEditBar()),
     finishEdit: () => dispatch(finishUpdateItem()),
-    createTodo: () => dispatch(addTodo())
+    createTodo: () => dispatch(addTodo()),
+    createBuckets: () => dispatch(createBucket())
 });
 const mapStateToProps = (state, passedProps) => ({
-    taskText: state.taskText,
-    editText: state.editItem.text,
-    type: passedProps.type
+    taskText: state.todos.taskText,
+    bucketAddText: state.buckets.tempText,
+    editText: state.todos.editItem.text,
+    ...passedProps
 });
 export default connect(mapStateToProps, mapDispatchToProps)(AddTask);

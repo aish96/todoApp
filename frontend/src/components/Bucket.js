@@ -8,14 +8,7 @@ import { addTodo, addInputBar } from "../redux/actions/TodoAction";
 import AddTask from "./CreateNewItem";
 import Todo from "./Todo";
 import { TYPES } from "../utils";
-
-
-const colors = ["e69373", "805240", "e6d5cf", "bf5830",
-    "77d36a", "488040", "d2e6cf", "43bf30",
-    "557aaa", "405c80", "cfd9e6", "306ebf",
-    "ff9900", "b36b00", "ffcc80",
-    "00b366", "007d48", "bfffe4", "80ffc9",
-    "400099", "2d006b", "dabfff", "b580ff"];
+import { addInputBar_Bucket } from "../redux/actions/BucketsActions";
 
 class Bucket extends Component {
 
@@ -25,36 +18,44 @@ class Bucket extends Component {
 
     render() {
         let totalItems = this.props.listItems.length;
-        let colorIdx = _.random(colors.length - 1);
-        let borderStyle = {
-            borderTop: `7px solid #${colors[colorIdx]}`
-        };
+        let borderStyle = {};
+        if (this.props.bucket) {
+            borderStyle = {
+                borderTop: `7px solid #${this.props.bucket.color}`
+            };
+        }
         return (
             <Card>
                 <Card.Body style={borderStyle}>
                     {this.props.addNew &&
                         <Card.Body className="text-center">
-                            <Button variant="link">
-                                <FontAwesomeIcon icon={faPlus} className="icons" /> Add new bucket
-                        </Button>
+                            {this.props.isAddBucketClicked ?
+                                <AddTask type={TYPES.ADD_BUCKET} />
+                                : <Button variant="link" onClick={this.props.onAddBucketClick}>
+                                    <FontAwesomeIcon icon={faPlus} className="icons" /> Add new bucket
+                        </Button>}
                         </Card.Body>
                     }
                     {!this.props.addNew &&
                         <Fragment>
-                            <Card.Title>Card Title</Card.Title>
+                            <Card.Title>{this.props.bucket.name}</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted">{totalItems} Card{totalItems > 1 ? "s" : ""}</Card.Subtitle>
                             <ListGroup className="list-group-flush">
                                 <ListGroupItem>
                                     {this.props.isAddTaskClicked ?
                                         <AddTask type={TYPES.ADD_TODO} /> :
-                                        <Button variant="link" onClick={this.props.onAddTask}>
+                                        <Button variant="link" onClick={() => { this.props.onAddTask(this.props.bucket.id) }}>
                                             <FontAwesomeIcon icon={faPlus} className="icons" /> Add new tasks
                                         </Button>
                                     }
                                 </ListGroupItem>
-                                {this.props.listItems && this.props.listItems.map(item => (
-                                    <ListGroupItem key={item.id}><Todo item={item} /></ListGroupItem>
-                                ))}
+                                {this.props.listItems && this.props.listItems.map(item => {
+                                    if (item.bucketId === this.props.bucket.id)
+                                        return (< ListGroupItem key={item.id} >
+                                            <Todo item={item} bucket={this.props.bucket} />
+                                        </ListGroupItem>)
+                                    return null;
+                                })}
                             </ListGroup>
                         </Fragment>
                     }
@@ -64,11 +65,14 @@ class Bucket extends Component {
 }
 const mapDispatchToProps = dispatch => ({
     addTodo: todo => dispatch(addTodo(todo)),
-    onAddTask: () => dispatch(addInputBar())
+    onAddTask: (e) => dispatch(addInputBar(e)),
+    onAddBucketClick: () => dispatch(addInputBar_Bucket())
+
 });
-const mapStateToProps = ({ todos, isAddTaskClicked }, passedProps) => ({
-    isAddTaskClicked,
-    listItems: todos,
-    ...passedProps
+const mapStateToProps = ({ todos, buckets }, passedProps) => ({
+    isAddTaskClicked: todos.isAddTaskClicked,
+    listItems: todos.todos,
+    ...passedProps,
+    isAddBucketClicked: buckets.isAddBucketClicked
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Bucket);

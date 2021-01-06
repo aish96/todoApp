@@ -29,7 +29,7 @@ export const TodoReducer = (state = initialState, action) => {
                 if (state.taskText && state.taskText.trim())
                     prevTodos.push({ text: state.taskText.trim(), id: uniqid() });
                 window.localStorage.setItem("todosState", JSON.stringify({ ...state, todos: prevTodos, isAddTaskClicked: false, editItem: {}, selected: null }));
-                return { ...state, todos: prevTodos, taskText: "", isAddTaskClicked: false };
+                return { ...state, todos: prevTodos, taskText: "", isAddTaskClicked: false, taskText: "" };
             }
         case DELETE_TODO:
             let todos = state.todos.filter(todo => todo.id !== action.payload);

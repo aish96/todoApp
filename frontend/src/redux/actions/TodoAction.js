@@ -24,9 +24,10 @@ export const deleteTodo = (id) => {
     }
 }
 
-export const addInputBar = () => {
+export const addInputBar = (bucketId) => {
     return {
-        type: ADD_INPUT_BAR
+        type: ADD_INPUT_BAR,
+        payload: bucketId
     }
 }
 

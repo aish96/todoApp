@@ -6,10 +6,12 @@ import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { connect } from 'react-redux';
 import { persistTodos } from "./redux/actions/TodoAction";
 import { Component } from 'react';
+import { persistBuckets } from './redux/actions/BucketsActions';
 
 class App extends Component {
   componentDidMount() {
     this.props.persistTodos();
+    this.props.persistBucket();
   };
   render() {
     return (
@@ -21,14 +23,22 @@ class App extends Component {
     </Navbar.Brand>
         </Navbar>
         <CardColumns className="container">
-          <Bucket />
+          {this.props.buckets && this.props.buckets.map(bucket => (
+            <Bucket key={bucket.id} bucket={bucket} />
+          ))}
           <Bucket addNew />
         </CardColumns>
       </div>
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    buckets: state.buckets.buckets
+  }
+}
 const mapDispatchToProps = dispatch => ({
-  persistTodos: () => dispatch(persistTodos())
+  persistTodos: () => dispatch(persistTodos()),
+  persistBucket: () => dispatch(persistBuckets()),
 });
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
